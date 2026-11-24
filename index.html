@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ลอยกระทงสองเรา</title>
+<meta name="description" content="ลอยกระทงออนไลน์สำหรับสองคน แต่งกระทง เดินจับมือริมน้ำจันทบุรี คุยกันด้วยเสียง">
+<meta name="theme-color" content="#2b2150">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Mitr:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<section class="river" id="river" aria-label="แม่น้ำลอยกระทง">
+<canvas id="sky"></canvas>
+<div class="top">
+<span class="tright">
+<span class="pill" id="livePill"><span class="dot"></span><span id="liveText">กำลังเชื่อมต่อ</span></span>
+<button class="pill" id="inviteBtn" type="button">💌 ชวนแฟน</button>
+</span>
+<span class="tright">
+<button class="pill" id="editPill" type="button" hidden>✎ แต่งใหม่</button>
+<button class="pill" id="musicBtn" aria-pressed="false" type="button">♪ เพลง</button>
+</span>
+</div>
+<div class="logo">
+<h1>ลอยกระทงสองเรา</h1>
+<p id="sub">ริมแม่น้ำจันทบุรี · คืนวันเพ็ญเดือนสิบสอง</p>
+</div>
+<div class="layer" id="layer"></div>
+<div class="meet" id="meet">ลอยมาเจอกันแล้ว 💞</div>
+<div class="empty-note" id="empty">ยังไม่มีกระทงในแม่น้ำ</div>
+<button class="cta" id="openMaker" type="button">ลอยกระทงของฉัน</button>
+<div class="chat" id="chat" hidden>
+<div class="chat-log" id="chatLog" aria-live="polite"></div>
+<form class="chat-row" id="chatForm" autocomplete="off">
+<input id="chatInput" maxlength="120" placeholder="พิมพ์ข้อความ…" aria-label="ข้อความ">
+<button type="submit" class="send">ส่ง</button>
+</form>
+<p class="chat-note" id="chatNote"></p>
+</div>
+<div class="actions" id="actions" hidden role="toolbar" aria-label="ท่าทางและอิโมจิ">
+<button type="button" data-g="wave"><b>👋</b><span>โบกมือ</span></button>
+<button type="button" data-g="jump"><b>🦘</b><span>กระโดด</span></button>
+<button type="button" data-g="dance"><b>💃</b><span>เต้น</span></button>
+<button type="button" data-g="wai"><b>🙏</b><span>ไหว้</span></button>
+<button type="button" id="chatBtn" aria-expanded="false"><b>💬</b><span>แชต</span></button>
+<button type="button" id="voiceBtn" aria-pressed="false"><b>🎙️</b><span>เปิดไมค์</span></button>
+<i class="sep" aria-hidden="true"></i>
+<button type="button" data-e="❤️" aria-label="หัวใจ"><b>❤️</b></button>
+<button type="button" data-e="🥰" aria-label="หลงรัก"><b>🥰</b></button>
+<button type="button" data-e="😊" aria-label="ยิ้ม"><b>😊</b></button>
+<button type="button" data-e="😂" aria-label="ขำ"><b>😂</b></button>
+<button type="button" data-e="😘" aria-label="ส่งจูบ"><b>😘</b></button>
+<button type="button" data-e="🎉" aria-label="ฉลอง"><b>🎉</b></button>
+<button type="button" data-e="✨" aria-label="ประกาย"><b>✨</b></button>
+</div>
+</section>
+<div class="maker" id="maker" hidden>
+<form class="card" id="form" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="stepTitle">
+<div class="card-head">
+<h2 id="stepTitle">ชื่อของคุณ</h2>
+<button class="x" id="closeMaker" type="button" aria-label="ปิด">✕</button>
+</div>
+<div class="dots" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+<div class="card-body">
+<div class="pvbox" id="pvbox">
+<div class="pv" id="pv"></div>
+<div class="pv-name" id="pvName"></div>
+<div class="pv-wish" id="pvWish"></div>
+</div>
+<div data-step="1">
+<div class="field">
+<label for="name">ชื่อเล่น</label>
+<input id="name" maxlength="24" placeholder="เช่น ต้นข้าว">
+<p class="help">ชื่อนี้จะขึ้นบนกระทงให้อีกคนเห็น</p>
+</div>
+<div class="status" id="status"><span class="dot"></span><span id="statusText">กำลังเชื่อมต่อแม่น้ำ…</span></div>
+</div>
+<div data-step="2" id="gKrathong"></div>
+<div data-step="3">
+<div class="row"><span class="help">แต่งตัวละครที่ยืนบนกระทง</span><button class="btn ghost small" id="randomBtn" type="button">สุ่มทั้งชุด</button></div>
+<div id="gLook"></div>
+<div id="gOutfit"></div>
+</div>
+<div data-step="4">
+<div class="field">
+<label for="wish">คำอธิษฐาน</label>
+<textarea id="wish" rows="3" maxlength="160" placeholder="ขอให้ปีหน้าได้ลอยกระทงด้วยกันอีก"></textarea>
+<div class="count"><span id="wishCount">0</span>/160</div>
+</div>
+<div class="msg" id="msg" role="status"></div>
+</div>
+</div>
+<div class="card-foot">
+<button class="btn ghost" id="prevBtn" type="button">ย้อนกลับ</button>
+<button class="btn primary" id="nextBtn" type="submit">ถัดไป</button>
+<button class="btn pink" id="floatBtn" type="submit">ลอยกระทง</button>
+</div>
+<div style="padding:0 22px 14px;text-align:center"><button class="btn ghost small" id="removeBtn" type="button" hidden>เก็บกระทงของฉันขึ้นจากน้ำ</button></div>
+</form>
+</div>
+<div class="card-bg" id="cardBg" hidden>
+<div class="wcard" role="dialog" aria-modal="true" aria-labelledby="cWho">
+<p class="who" id="cWho"></p>
+<div class="lbl">คำอธิษฐาน</div>
+<p class="wish" id="cWish"></p>
+<div class="when" id="cWhen"></div>
+<button class="btn ghost" id="cClose" type="button">ปิด</button>
+</div>
+</div>
+<div class="invite" id="invite" hidden>
+<div class="wcard" role="dialog" aria-modal="true" aria-labelledby="invTitle">
+<p class="who" id="invTitle">ชวนแฟนมาลอยด้วยกัน</p>
+<p class="help" style="margin:8px 0 12px">ส่งลิงก์นี้ให้อีกคน เปิดแล้วจะเข้าห้องเดียวกับเราทันที ห้องนี้มีได้แค่สองคน</p>
+<input class="linkbox" id="inviteLink" readonly aria-label="ลิงก์ห้อง">
+<div style="display:flex;gap:8px;margin-top:12px">
+<button class="btn primary" id="copyLink" type="button">คัดลอกลิงก์</button>
+<button class="btn ghost" id="closeInvite" type="button">ปิด</button>
+</div>
+</div>
+</div>
+<audio id="remoteAudio" autoplay playsinline></audio>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="draw.js"></script>
+<script src="ui.js"></script>
+<script src="scene.js"></script>
+<script src="net.js"></script>
+</body>
+</html>
