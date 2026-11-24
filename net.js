@@ -96,9 +96,9 @@ function updatePill(){
 const ready=peer && peer.open;
 const kind = partnerOnline ? 'live' : 'warn';
 $('livePill').className='pill '+kind;
-$('liveText').textContent = partnerOnline ? 'แฟนออนไลน์อยู่' : (ready ? 'รอแฟนเข้าห้อง…' : 'กำลังเชื่อมต่อ…');
-if(partnerOnline) setStatus('live',['เชื่อมต่อกับแฟนแล้ว ',{b:'เห็นกันแบบสด'},' กดไมค์ด้านล่างเพื่อคุยกันได้เลย']);
-else setStatus('warn',['ห้อง ',{b:ROOM},' · กด 💌 ชวนแฟน มุมซ้ายบน แล้วส่งลิงก์ให้อีกคนเปิด']);
+$('liveText').textContent = partnerOnline ? 'เพื่อนออนไลน์อยู่' : (ready ? 'รอเพื่อนเข้าห้อง…' : 'กำลังเชื่อมต่อ…');
+if(partnerOnline) setStatus('live',['เชื่อมต่อกับเพื่อนแล้ว ',{b:'เห็นกันแบบสด'},' กดไมค์ด้านล่างเพื่อคุยกันได้เลย']);
+else setStatus('warn',['ห้อง ',{b:ROOM},' · กด 💌 ชวนเพื่อน มุมซ้ายบน แล้วส่งลิงก์ให้อีกคนเปิด']);
 }
 function netSend(m){ if(conn && conn.open){ try{ conn.send(m); }catch(e){} } }
 function otherPid(){ return role==='a' ? PID.b : PID.a; }
@@ -148,7 +148,7 @@ netSend({type:'mic',on:true});
 function answerCall(call){
 call.answer(); // receive only; we send our own voice on a call of our own
 inCalls.push(call);
-call.on('stream',st=>{ const a=$('remoteAudio'); a.srcObject=st; a.play().catch(()=>{ $('chatNote').textContent='แตะที่หน้าจอหนึ่งครั้งเพื่อฟังเสียงแฟน'; }); setPartnerTalking(true); });
+call.on('stream',st=>{ const a=$('remoteAudio'); a.srcObject=st; a.play().catch(()=>{ $('chatNote').textContent='แตะที่หน้าจอหนึ่งครั้งเพื่อฟังเสียงอีกคน'; }); setPartnerTalking(true); });
 call.on('close',()=>{ inCalls=inCalls.filter(c=>c!==call); if(!inCalls.length) setPartnerTalking(false); });
 }
 document.addEventListener('click',()=>{ const a=$('remoteAudio'); if(a.srcObject && a.paused) a.play().catch(()=>{}); },{capture:true});
@@ -161,7 +161,7 @@ netSend({type:'mic',on:false}); setVoiceBtn(false); return;
 try{ micStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}}); }
 catch(e){ $('chat').hidden=false; $('chatNote').textContent='เปิดไมค์ไม่ได้ กดอนุญาตไมโครโฟนในเบราว์เซอร์ก่อนนะ'; return; }
 setVoiceBtn(true); callPartner();
-if(!partnerOnline){ $('chat').hidden=false; $('chatNote').textContent='ไมค์เปิดแล้ว พอแฟนเข้าห้อง เสียงจะต่อให้เอง'; }
+if(!partnerOnline){ $('chat').hidden=false; $('chatNote').textContent='ไมค์เปิดแล้ว พอเพื่อนเข้าห้อง เสียงจะต่อให้เอง'; }
 });
 $('inviteBtn').addEventListener('click',()=>{ $('inviteLink').value=location.href; $('invite').hidden=false; });
 $('closeInvite').addEventListener('click',()=>{ $('invite').hidden=true; });
