@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#2b2150">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Mitr:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 <section class="river" id="river" aria-label="แม่น้ำลอยกระทง">
@@ -44,6 +44,7 @@
 <button type="button" data-g="jump"><b>🦘</b><span>กระโดด</span></button>
 <button type="button" data-g="dance"><b>💃</b><span>เต้น</span></button>
 <button type="button" data-g="wai"><b>🙏</b><span>ไหว้</span></button>
+<button type="button" id="lanternBtn"><b>🏮</b><span>ปล่อยโคม</span></button>
 <button type="button" data-fw="1"><b>🎆</b><span>จุดพลุ</span></button>
 <button type="button" id="chatBtn" aria-expanded="false"><b>💬</b><span>แชต</span></button>
 <button type="button" id="voiceBtn" aria-pressed="false"><b>🎙️</b><span>เปิดไมค์</span></button>
@@ -121,11 +122,22 @@
 </div>
 </div>
 </div>
+<div class="invite" id="lanternBox" hidden>
+<form class="wcard" id="lanternForm" role="dialog" aria-modal="true" aria-labelledby="lnTitle" autocomplete="off">
+<p class="who" id="lnTitle">ปล่อยโคมลอย</p>
+<p class="help" id="lnHelp" style="margin:6px 0 12px">เขียนคำอธิษฐานบนโคม แล้วปล่อยขึ้นฟ้า อีกคนจะเห็นโคมของเราลอยขึ้นไป</p>
+<textarea class="linkbox" id="lnWish" rows="2" maxlength="80" placeholder="ขอให้มีความสุขมากๆ" aria-label="คำอธิษฐานบนโคม" style="resize:none"></textarea>
+<div style="display:flex;gap:8px;margin-top:12px">
+<button class="btn pink" type="submit">ปล่อยโคม 🏮</button>
+<button class="btn ghost" id="lnClose" type="button">ปิด</button>
+</div>
+</form>
+</div>
 <audio id="remoteAudio" autoplay playsinline></audio>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="draw.js?v=3"></script>
-<script src="ui.js?v=3"></script>
-<script src="scene.js?v=3"></script>
-<script src="net.js?v=3"></script>
+<script src="draw.js?v=6"></script>
+<script src="ui.js?v=6"></script>
+<script src="scene.js?v=6"></script>
+<script src="net.js?v=6"></script>
 </body>
 </html>

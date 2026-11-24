@@ -176,3 +176,15 @@ html,body{margin:0}
 #voiceBtn[aria-pressed="true"]{background:#e8584f;color:#fff;animation:pulse 1.2s ease-in-out infinite}
 .walker.talking .fig{filter:drop-shadow(0 0 6px rgba(120,230,160,.9))}
 .top{flex-wrap:wrap}
+.wl{position:absolute;z-index:5;pointer-events:none;width:60px;margin-left:-30px;animation:wlRise 16s cubic-bezier(.35,.05,.55,1) forwards}
+.wl .sway{animation:wlSway 2.6s ease-in-out infinite alternate}
+.wl svg{width:60px;height:auto;display:block;margin:0 auto;filter:drop-shadow(0 0 14px rgba(255,170,80,.9)) drop-shadow(0 0 30px rgba(255,140,60,.55))}
+.wl .lt{display:block;margin:4px auto 0;width:max-content;max-width:170px;background:rgba(255,248,234,.92);border:1.5px solid var(--gold-hi);border-radius:12px;padding:3px 10px;
+font-family:var(--f-ui);font-size:12.5px;line-height:1.35;color:var(--brown);text-align:center;overflow-wrap:anywhere;box-shadow:0 3px 10px rgba(60,20,40,.3);animation:wlText 16s linear forwards}
+@keyframes wlRise{0%{transform:translateY(0) scale(1);opacity:0}4%{opacity:1}80%{opacity:1}100%{transform:translate(var(--dx),-78vh) scale(.42);opacity:0}}
+@keyframes wlSway{from{transform:translateX(-7px) rotate(-3deg)}to{transform:translateX(7px) rotate(3deg)}}
+@keyframes wlText{0%,55%{opacity:1}75%,100%{opacity:0}}
+.walker.g-lift .armL{animation:none;transform:rotate(125deg)}
+.walker.g-lift .armR{animation:none;transform:rotate(-125deg)}
+.walker.g-lift .fig{animation:none;transform:translateY(-3px)}
+@media (prefers-reduced-motion:reduce){.wl,.wl .sway{animation-duration:.01s}}

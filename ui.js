@@ -126,8 +126,9 @@ b.wk.classList.add('g-'+a.g);
 clearTimeout(b.gTimer); b.gTimer=setTimeout(()=>b.wk.classList.remove('g-'+a.g),2600);
 }
 if(a.fw){ // a short fireworks show over the river, seen on both screens
-for(let k=0;k<5;k++) setTimeout(()=>{ const W0=river.clientWidth, H0=river.clientHeight; burstAt(W0*(0.15+Math.random()*0.7), H0*(0.08+Math.random()*0.22)); }, k*320);
+for(let k=0;k<5;k++) setTimeout(()=>{ rockets.push({x:W*(0.15+Math.random()*0.7),y:WATER(),ty:H*(0.08+Math.random()*0.22),loud:true}); try{ sfxWhoosh(.35); }catch(e){} }, k*380);
 }
+if(typeof a.ln==='string' && a.ln) releaseLantern(b, a.ln.slice(0,80), !!a.tg && boats.size===2);
 if(a.e && EMOJIS.includes(a.e)){
 const e=document.createElement('span'); e.className='emo'; e.textContent=a.e;
 b.wk.appendChild(e); setTimeout(()=>e.remove(),2700);
@@ -205,7 +206,7 @@ for(const b of boats.values()){
 b.wk.classList.toggle('hold-r', settled && b.order===0);
 b.wk.classList.toggle('hold-l', settled && b.order===1);
 }
-$('meet').classList.toggle('on',settled);
+$('meet').classList.toggle('on',settled); holdingHands=settled;
 if(settled && now-lastHeart>1100 && !reduce){
 lastHeart=now;
 const h=document.createElement('div'); h.className='heart'; h.textContent='♥';
@@ -228,3 +229,37 @@ $('cardBg').hidden=false; $('cClose').focus();
 $('cClose').addEventListener('click',()=>{$('cardBg').hidden=true;});
 $('cardBg').addEventListener('click',e=>{ if(e.target===$('cardBg')) $('cardBg').hidden=true; });
 addEventListener('keydown',e=>{ if(e.key==='Escape') $('cardBg').hidden=true; });
+let holdingHands=false;
+const LANTERN_SVG=`<svg viewBox="0 0 60 78" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<defs><linearGradient id="wlg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb04a"/><stop offset=".55" stop-color="#ffd27a"/><stop offset="1" stop-color="#fff2c4"/></linearGradient>
+<radialGradient id="wlf" cx=".5" cy=".85" r=".6"><stop offset="0" stop-color="#fffbe6" stop-opacity=".95"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient></defs>
+<path d="M12 6 Q30 0 48 6 L54 60 Q30 68 6 60Z" fill="url(#wlg)" stroke="#d9822e" stroke-width="1.2"/>
+<path d="M12 6 Q30 0 48 6 L54 60 Q30 68 6 60Z" fill="url(#wlf)"/>
+<path d="M21 4 L18 62 M30 2 L30 64 M39 4 L42 62" stroke="#e8964a" stroke-width=".8" opacity=".6"/>
+<path d="M8 60 Q30 68 52 60 L50 64 Q30 72 10 64Z" fill="#c9702a"/>
+<path d="M30 70 Q34 74 30 78 Q26 74 30 70Z" fill="#fff3c0"/></svg>`;
+function releaseLantern(b,text,together){
+const ww=wwidth();
+const x = together ? river.clientWidth/2 : (b ? b.wx+ww/2 : river.clientWidth/2);
+const el=document.createElement('div'); el.className='wl';
+el.style.left=x+'px'; el.style.bottom=(walkH()*0.6+ww*1.15)+'px';
+el.style.setProperty('--dx',(Math.random()*140-70)+'px');
+const sw=document.createElement('div'); sw.className='sway'; sw.innerHTML=LANTERN_SVG;
+const t=document.createElement('span'); t.className='lt'; t.textContent=text;
+sw.appendChild(t); el.appendChild(sw); river.appendChild(el);
+setTimeout(()=>el.remove(),16500);
+const lifters = together ? [...boats.values()] : (b?[b]:[]);
+lifters.forEach(x=>{ x.wk.classList.add('g-lift'); clearTimeout(x.liftT); x.liftT=setTimeout(()=>x.wk.classList.remove('g-lift'),2200); });
+}
+$('lanternBtn').addEventListener('click',()=>{
+$('lnHelp').textContent = holdingHands ? 'ตอนนี้จับมือกันอยู่ โคมจะลอยขึ้นจากมือของทั้งสองคน 💞' : 'เขียนคำอธิษฐานบนโคม แล้วปล่อยขึ้นฟ้า อีกคนจะเห็นโคมของเราลอยขึ้นไป';
+$('lanternBox').hidden=false; setTimeout(()=>{ try{ $('lnWish').focus(); }catch(e){} },40);
+});
+$('lnClose').addEventListener('click',()=>{ $('lanternBox').hidden=true; });
+$('lanternBox').addEventListener('click',e=>{ if(e.target===$('lanternBox')) $('lanternBox').hidden=true; });
+$('lanternForm').addEventListener('submit',e=>{
+e.preventDefault();
+const text=$('lnWish').value.trim().slice(0,80) || 'ขอให้มีความสุข';
+$('lanternBox').hidden=true; $('lnWish').value='';
+lastSend=0; sendAct({ln:text, tg:holdingHands});
+});

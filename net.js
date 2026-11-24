@@ -77,7 +77,7 @@ const PID={a:`lkrt2569-${ROOM}-a`, b:`lkrt2569-${ROOM}-b`};
 function sanitize(d,id){
 if(!d||typeof d!=='object'||typeof d.name!=='string') return null;
 const a=(d.act && typeof d.act==='object') ? d.act : null;
-const act = a ? {g: GESTURES[a.g] ? a.g : null, e: EMOJIS.includes(a.e) ? a.e : null, fw: a.fw===true, t: typeof a.t==='number' ? a.t : 0} : null;
+const act = a ? {g: GESTURES[a.g] ? a.g : null, e: EMOJIS.includes(a.e) ? a.e : null, fw: a.fw===true, ln: typeof a.ln==='string' ? a.ln.slice(0,80) : null, tg: a.tg===true, t: typeof a.t==='number' ? a.t : 0} : null;
 const msgs = Array.isArray(d.msgs) ? d.msgs.filter(m=>m && typeof m.text==='string' && typeof m.t==='number').slice(-12).map(m=>({text:str(m.text,120),t:m.t})) : [];
 return {id, name:str(d.name,24), wish:str(d.wish,160), cfg:clean(d.cfg), floatedAt: typeof d.floatedAt==='number'?d.floatedAt:0, act, msgs};
 }
@@ -189,3 +189,25 @@ render();
 if(!mine) openMaker();
 startPeer('a');
 addEventListener('hashchange',()=>location.reload());
+let sfx=null, noiseBuf=null;
+function sfxReady(){
+if(!sfx){ try{ sfx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return false; }
+noiseBuf=sfx.createBuffer(1,sfx.sampleRate*2,sfx.sampleRate); const d=noiseBuf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1; }
+if(sfx.state==='suspended') sfx.resume().catch(()=>{});
+return sfx.state!=='closed';
+}
+addEventListener('pointerdown',()=>sfxReady(),{once:true,capture:true});
+function noise(t,dur,type,f0,f1,vol,q){
+const n=sfx.createBufferSource(); n.buffer=noiseBuf; n.playbackRate.value=.8+Math.random()*.4;
+const fl=sfx.createBiquadFilter(); fl.type=type; fl.Q.value=q||1; fl.frequency.setValueAtTime(f0,t); if(f1) fl.frequency.exponentialRampToValueAtTime(f1,t+dur);
+const g=sfx.createGain(); g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+n.connect(fl); fl.connect(g); g.connect(sfx.destination); n.start(t); n.stop(t+dur+.05);
+}
+function sfxWhoosh(vol){ if(!vol||!sfxReady()) return; const t=sfx.currentTime; noise(t,.9,'bandpass',500,2600,vol*.5,2.5); }
+function sfxBoom(vol){
+if(!vol||!sfxReady()) return; const t=sfx.currentTime;
+noise(t,1.4,'lowpass',900,120,vol,0.7);
+const o=sfx.createOscillator(), g=sfx.createGain(); o.frequency.setValueAtTime(90,t); o.frequency.exponentialRampToValueAtTime(38,t+.5);
+g.gain.setValueAtTime(vol*.8,t); g.gain.exponentialRampToValueAtTime(.0001,t+.7); o.connect(g); g.connect(sfx.destination); o.start(t); o.stop(t+.75);
+for(let i=0;i<14;i++) noise(t+.25+Math.random()*.9,.05,'highpass',3000,0,vol*.35*Math.random(),1); // crackle
+}
