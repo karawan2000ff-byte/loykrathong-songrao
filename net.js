@@ -77,7 +77,7 @@ const PID={a:`lkrt2569-${ROOM}-a`, b:`lkrt2569-${ROOM}-b`};
 function sanitize(d,id){
 if(!d||typeof d!=='object'||typeof d.name!=='string') return null;
 const a=(d.act && typeof d.act==='object') ? d.act : null;
-const act = a ? {g: GESTURES[a.g] ? a.g : null, e: EMOJIS.includes(a.e) ? a.e : null, t: typeof a.t==='number' ? a.t : 0} : null;
+const act = a ? {g: GESTURES[a.g] ? a.g : null, e: EMOJIS.includes(a.e) ? a.e : null, fw: a.fw===true, t: typeof a.t==='number' ? a.t : 0} : null;
 const msgs = Array.isArray(d.msgs) ? d.msgs.filter(m=>m && typeof m.text==='string' && typeof m.t==='number').slice(-12).map(m=>({text:str(m.text,120),t:m.t})) : [];
 return {id, name:str(d.name,24), wish:str(d.wish,160), cfg:clean(d.cfg), floatedAt: typeof d.floatedAt==='number'?d.floatedAt:0, act, msgs};
 }

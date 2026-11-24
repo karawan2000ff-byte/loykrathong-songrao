@@ -125,6 +125,9 @@ void b.wk.offsetWidth;
 b.wk.classList.add('g-'+a.g);
 clearTimeout(b.gTimer); b.gTimer=setTimeout(()=>b.wk.classList.remove('g-'+a.g),2600);
 }
+if(a.fw){ // a short fireworks show over the river, seen on both screens
+for(let k=0;k<5;k++) setTimeout(()=>{ const W0=river.clientWidth, H0=river.clientHeight; burstAt(W0*(0.15+Math.random()*0.7), H0*(0.08+Math.random()*0.22)); }, k*320);
+}
 if(a.e && EMOJIS.includes(a.e)){
 const e=document.createElement('span'); e.className='emo'; e.textContent=a.e;
 b.wk.appendChild(e); setTimeout(()=>e.remove(),2700);
@@ -138,6 +141,7 @@ const b=boats.get(myId); playAct(b,a);
 netSend({type:'act',act:a});
 }
 document.querySelectorAll('#actions [data-g]').forEach(btn=>btn.addEventListener('click',()=>sendAct({g:btn.dataset.g})));
+document.querySelectorAll('#actions [data-fw]').forEach(btn=>btn.addEventListener('click',()=>sendAct({fw:true})));
 document.querySelectorAll('#actions [data-e]').forEach(btn=>btn.addEventListener('click',()=>sendAct({e:btn.dataset.e})));
 let myMsgs=[];
 function showSay(b,text){

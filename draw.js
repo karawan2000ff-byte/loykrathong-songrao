@@ -165,102 +165,126 @@ return `<g transform="translate(${dx} 0)">
 <g fill="#ff6a2a"><circle cx="110" cy="134" r="2"/><circle cx="117" cy="130" r="2"/><circle cx="124" cy="134" r="2"/></g>
 <path d="M117 128 q-4 -8 1 -14 q5 -6 0 -12" stroke="#fff" stroke-opacity=".3" stroke-width="1.2" fill="none"/>`;
 }
+const OL='#3b2a20';
+const ol=(w)=>`stroke="${OL}" stroke-width="${w||1.1}" stroke-linejoin="round"`;
 function hairBack(c){
-const h=c.hairColor;
+const h=c.hairColor, d=shade(h,-.25);
 switch(c.hair){
-case 'long': return `<path d="M80 92 Q80 60 110 60 Q140 60 140 92 L143 142 Q110 150 77 142Z" fill="${h}"/>`;
-case 'bob': return `<path d="M81 92 Q81 61 110 61 Q139 61 139 92 L141 116 Q110 123 79 116Z" fill="${h}"/>`;
-case 'ponytail': return `<path d="M133 78 Q166 84 156 132 Q148 112 132 100Z" fill="${h}"/><circle cx="136" cy="80" r="4" fill="${c.outfitColor}"/>`;
-case 'bun': return `<circle cx="110" cy="60" r="14" fill="${h}"/><path d="M98 70 Q110 64 122 70" stroke="${c.outfitColor}" stroke-width="3" fill="none"/>`;
+case 'long': return `<path d="M84 78 Q82 50 110 50 Q138 50 136 78 L140 126 Q133 132 125 126 L122 104 L98 104 L95 126 Q87 132 80 126Z" fill="${h}" ${ol()}/><path d="M88 96 L86 124 M132 96 L134 124" stroke="${d}" stroke-width="1.2" fill="none"/>`;
+case 'bob': return `<path d="M84 80 Q82 50 110 50 Q138 50 136 80 L138 104 Q128 110 120 104 L100 104 Q92 110 82 104Z" fill="${h}" ${ol()}/>`;
+case 'ponytail': return `<path d="M128 62 Q156 66 150 104 Q147 122 140 128 Q142 108 134 90Z" fill="${h}" ${ol()}/><path d="M138 74 Q148 90 142 116" stroke="${d}" stroke-width="1.2" fill="none"/><circle cx="131" cy="66" r="3.6" fill="${c.outfitColor}" ${ol(.8)}/>`;
+case 'bun': return `<circle cx="110" cy="50" r="11" fill="${h}" ${ol()}/><path d="M103 46 Q110 42 117 46" stroke="${shade(h,.3)}" stroke-width="1.4" fill="none"/><path d="M100 57 Q110 53 120 57" stroke="${c.outfitColor}" stroke-width="2.6" fill="none"/>`;
 default: return '';
 }
 }
 function hairFront(c){
-const h=c.hairColor;
-if(c.hair==='spiky') return `<path d="M82 94 L80 74 L90 78 L92 62 L102 72 L110 56 L118 72 L128 62 L130 78 L140 74 L138 94 Q128 80 110 82 Q92 80 82 94Z" fill="${h}"/>`;
-if(c.hair==='side') return `<path d="M83 94 Q80 62 112 61 Q142 63 138 94 Q136 80 126 76 Q106 72 92 82 Q86 86 83 94Z" fill="${h}"/><path d="M92 80 Q110 66 132 74 Q114 70 100 82Z" fill="${shade(h,.2)}" opacity=".6"/>`;
-if(c.hair==='short') return `<path d="M83 93 Q81 64 110 63 Q139 64 137 93 Q130 79 110 80 Q94 79 83 93Z" fill="${h}"/>`;
-return `<path d="M83 95 Q83 63 110 63 Q137 63 137 95 Q128 80 117 82 Q112 73 104 82 Q92 82 83 95Z" fill="${h}"/>`;
+const h=c.hairColor, d=shade(h,-.3), hi=shade(h,.45);
+const shine=`<path d="M95 60 Q110 54 125 60" stroke="${hi}" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".7"/>`;
+switch(c.hair){
+case 'spiky': return `<path d="M85 82 L83 64 L91 67 L92 54 L101 61 L108 48 L115 60 L125 53 L127 65 L136 63 L135 82 Q130 70 122 68 Q116 74 108 68 Q100 74 94 68 Q88 72 85 82Z" fill="${h}" ${ol()}/><path d="M100 60 L104 68 M116 58 L114 67" stroke="${d}" stroke-width="1" fill="none"/>`+shine;
+case 'side': return `<path d="M85 84 Q82 52 112 51 Q140 53 135 84 Q133 70 124 66 Q108 64 96 74 Q90 78 85 84Z" fill="${h}" ${ol()}/><path d="M96 74 Q110 60 132 66 M102 70 Q114 62 128 64" stroke="${d}" stroke-width="1" fill="none"/>`+shine;
+case 'short': return `<path d="M85 82 Q83 51 110 50 Q137 51 135 82 Q133 70 127 66 Q119 72 109 66 Q99 72 93 66 Q87 72 85 82Z" fill="${h}" ${ol()}/><path d="M99 67 L101 61 M115 66 L117 60" stroke="${d}" stroke-width="1" fill="none"/>`+shine;
+default: // soft fringe for long / bob / ponytail / bun
+return `<path d="M85 86 Q84 52 110 52 Q136 52 135 86 Q131 72 122 69 Q118 78 110 73 Q102 79 97 69 Q89 73 85 86Z" fill="${h}" ${ol()}/><path d="M97 69 Q99 76 98 82 M122 69 Q121 76 123 82 M110 73 L110 78" stroke="${d}" stroke-width="1" fill="none"/>`+shine;
+}
 }
 function face(c){
-const ink='#2a1c1c'; let e='',m='';
-const eye=(x)=>`<ellipse cx="${x}" cy="96" rx="2.8" ry="3.4" fill="${ink}"/><circle cx="${x+1}" cy="94.8" r="1" fill="#fff"/>`;
-const arcUp=(x)=>`<path d="M${x-4} 97 Q${x} 92 ${x+4} 97" stroke="${ink}" stroke-width="2" fill="none" stroke-linecap="round"/>`;
-let blush=.35;
+const ink='#2a1a14', f=c.gender==='f';
+const eye=(x)=>`<ellipse cx="${x}" cy="88" rx="2.7" ry="3.5" fill="${ink}"/><circle cx="${x+1}" cy="86.6" r="1.1" fill="#fff"/><circle cx="${x-.9}" cy="89.8" r=".5" fill="#fff" opacity=".8"/>`;
+const closed=(x,up)=>`<path d="M${x-3.4} ${up?89:87.5} Q${x} ${up?85:90} ${x+3.4} ${up?89:87.5}" stroke="${ink}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`;
+let e='', m='', blush=f?.45:.28;
+const lip=f?'#c2405a':ink;
 switch(c.face){
-case 'shy': e=`<path d="M96 96 Q100 98 104 96" stroke="${ink}" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M116 96 Q120 98 124 96" stroke="${ink}" stroke-width="2" fill="none" stroke-linecap="round"/>`; m=`<path d="M107 106 Q110 104 113 106" stroke="${ink}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`; blush=.7; break;
-case 'wink': e=eye(100)+`<path d="M116 97 L121 94.5 L116 92" stroke="${ink}" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`; m=`<path d="M104 104 Q110 110 116 104" stroke="${ink}" stroke-width="1.8" fill="none" stroke-linecap="round"/>`; break;
-case 'laugh': e=arcUp(100)+arcUp(120); m=`<path d="M103 103 Q110 103 117 103 Q116 112 110 112 Q104 112 103 103Z" fill="#8a2b3a"/><path d="M106 109 Q110 107 114 109" fill="#e5788a"/>`; blush=.5; break;
-default: e=eye(100)+eye(120); m=`<path d="M105 104 Q110 108.5 115 104" stroke="${ink}" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
+case 'shy': e=closed(101,false)+closed(119,false); m=`<path d="M108 99.5 Q110 98.5 112 99.5" stroke="${lip}" stroke-width="1.3" fill="none" stroke-linecap="round"/>`; blush+=.3; break;
+case 'wink': e=eye(101)+closed(119,true); m=`<path d="M106 98 Q110 102 114 98" stroke="${lip}" stroke-width="1.4" fill="none" stroke-linecap="round"/>`; break;
+case 'laugh': e=closed(101,true)+closed(119,true); m=`<path d="M105.5 97.5 L114.5 97.5 Q114 104 110 104 Q106 104 105.5 97.5Z" fill="#8a2b3a" ${ol(.8)}/><path d="M107.5 102 Q110 100.6 112.5 102" fill="#e5788a"/>`; blush+=.1; break;
+default: e=eye(101)+eye(119); m=`<path d="M107 98.5 Q110 101 113 98.5" stroke="${lip}" stroke-width="1.4" fill="none" stroke-linecap="round"/>`;
 }
-const f=c.gender==='f';
-if(f){ blush+=.15; if(c.face==='smile'||c.face==='wink') m=m.replace(`stroke="${ink}"`,'stroke="#c2405a"');
-e+=`<path d="M103 94 l3 -2.5 M102.5 96 l3.4 -1" stroke="${ink}" stroke-width="1.2" stroke-linecap="round"/>`;
-if(c.face!=='wink') e+=`<path d="M117 94 l-3 -2.5 M117.5 96 l-3.4 -1" stroke="${ink}" stroke-width="1.2" stroke-linecap="round"/>`; }
-const bw=f?1.2:2.4, bc=f?ink:c.hairColor;
-e+=`<path d="M95 ${f?88:87} Q100 ${f?85.5:85} 105 ${f?88:87.5}" stroke="${bc}" stroke-width="${bw}" fill="none" stroke-linecap="round"/><path d="M115 ${f?88:87.5} Q120 ${f?85.5:85} 125 ${f?88:87}" stroke="${bc}" stroke-width="${bw}" fill="none" stroke-linecap="round"/>`;
-return e+m+`<ellipse cx="94" cy="104" rx="5" ry="3" fill="#ff7f8f" opacity="${blush}"/><ellipse cx="126" cy="104" rx="5" ry="3" fill="#ff7f8f" opacity="${blush}"/>`;
+if(f){ e+=`<path d="M103.6 85.6 l2.2 -1.6 M116.4 85.6 l-2.2 -1.6" stroke="${ink}" stroke-width="1" stroke-linecap="round"/>`; }
+const bw=f?1.1:1.8, bc=f?shade(c.hairColor,-.1):c.hairColor;
+e+=`<path d="M97 ${f?81:80.5} Q101 ${f?79:78.5} 105 ${f?81:80.5}" stroke="${bc}" stroke-width="${bw}" fill="none" stroke-linecap="round"/><path d="M115 ${f?81:80.5} Q119 ${f?79:78.5} 123 ${f?81:80.5}" stroke="${bc}" stroke-width="${bw}" fill="none" stroke-linecap="round"/>`;
+e+=`<path d="M110 92.5 l-.8 2.2 h1.4" stroke="${shade(c.skin,-.3)}" stroke-width=".9" fill="none" stroke-linecap="round"/>`;
+return e+m+`<ellipse cx="96" cy="95" rx="4.2" ry="2.4" fill="#ff8a9a" opacity="${blush}"/><ellipse cx="124" cy="95" rx="4.2" ry="2.4" fill="#ff8a9a" opacity="${blush}"/>`;
+}
+function head(c){
+const sk=c.skin, sd=shade(sk,-.12);
+return `<path d="M106 104 L106 114 L114 114 L114 104Z" fill="${sd}" ${ol(1)}/>`
++ `<ellipse cx="86.5" cy="87" rx="3.4" ry="4.4" fill="${sk}" ${ol(1)}/><ellipse cx="133.5" cy="87" rx="3.4" ry="4.4" fill="${sk}" ${ol(1)}/>`
++ `<path d="M86 82 Q86 57 110 57 Q134 57 134 82 Q134 99 123 105.5 Q110 111 97 105.5 Q86 99 86 82Z" fill="${sk}" ${ol()}/>`
++ `<path d="M124 64 Q134 74 132 90 Q130 100 123 105 Q131 92 124 64Z" fill="#000" opacity=".05"/>`;
 }
 function body(c){
-const o=c.outfitColor, od=shade(o,-.25), sk=c.skin, gold='#e9c160';
-const legs=(y1)=>`<rect x="100" y="${y1}" width="8" height="${176-y1}" rx="3" fill="${sk}"/><rect x="112" y="${y1}" width="8" height="${176-y1}" rx="3" fill="${sk}"/>`;
-const shoes=(col)=>`<ellipse cx="103" cy="177" rx="7" ry="3.5" fill="${col}"/><ellipse cx="117" cy="177" rx="7" ry="3.5" fill="${col}"/>`;
-let s='', sleeve=o;
+const o=c.outfitColor, od=shade(o,-.22), sk=c.skin, gold='#e2b64e', goldD='#b8862a';
+const shade_r=(d)=>`<path d="${d}" fill="#000" opacity=".1"/>`;
+const legs=(col,y1,y2)=>`<path d="M100.5 ${y1} L109.6 ${y1} L109 ${y2} L101.5 ${y2}Z" fill="${col}" ${ol(1)}/><path d="M110.4 ${y1} L119.5 ${y1} L118.5 ${y2} L111 ${y2}Z" fill="${col}" ${ol(1)}/>`;
+const shoes=(col)=>`<path d="M99 172 Q99 168 105 168 Q110 168 110 172 L110 175.5 L98.5 175.5Z" fill="${col}" ${ol(1)}/><path d="M110 172 Q110 168 115 168 Q121 168 121 172 L121.5 175.5 L110 175.5Z" fill="${col}" ${ol(1)}/>`;
+const sneakers=`<path d="M98.5 171 Q99 167 105 167 Q110.5 167 110.5 171 L111 175.5 L98 175.5Z" fill="#f6f3ec" ${ol(1)}/><path d="M109.5 171 Q110 167 115 167 Q121 167 121.5 171 L122 175.5 L109.5 175.5Z" fill="#f6f3ec" ${ol(1)}/><path d="M98.3 173.6 H111 M109.6 173.6 H122" stroke="${o}" stroke-width="1.4"/>`;
+const torso=(col)=>`<path d="M96 113 Q110 109 124 113 L127 141 L93 141Z" fill="${col}" ${ol()}/>`+shade_r('M118 112 L124 113 L127 141 L120 141Z');
+let s='';
 switch(c.outfit){
-case 'thaiF':
-sleeve=sk;
-s+=`<path d="M88 146 L132 146 L136 176 L84 176Z" fill="${o}"/><path d="M86 168 L134 168 L135 174 L85 174Z" fill="${gold}"/><line x1="110" y1="148" x2="110" y2="166" stroke="${od}" stroke-width="1.5"/>`;
-s+=`<rect x="93" y="117" width="34" height="31" rx="9" fill="${sk}"/><path d="M93 128 Q110 124 127 128 L127 146 L93 146Z" fill="${shade(o,.15)}"/>`;
-s+=`<path d="M92 120 L101 118 L128 146 L118 147Z" fill="${gold}"/>`;
-break;
-case 'thaiM':
-s+=legs(160)+shoes('#2a1c1c');
-s+=`<path d="M93 144 Q88 160 98 163 L122 163 Q132 160 127 144Z" fill="${shade(o,-.45)}"/>`;
-s+=`<rect x="92" y="116" width="36" height="31" rx="8" fill="#efeadb"/><rect x="104" y="114" width="12" height="6" rx="2" fill="#efeadb" stroke="#cfc6a8"/>`;
-s+=`<g fill="${gold}"><circle cx="110" cy="124" r="1.6"/><circle cx="110" cy="131" r="1.6"/><circle cx="110" cy="138" r="1.6"/></g><rect x="92" y="141" width="36" height="4" fill="${o}"/>`;
-sleeve='#efeadb';
-break;
-case 'shirt':
-s+=`<path d="M96 145 L124 145 L123 174 L113 174 L110 152 L107 174 L97 174Z" fill="#2b2f45"/>`+shoes('#3a2416');
-s+=`<rect x="92" y="117" width="36" height="30" rx="8" fill="${o}"/><rect x="95" y="142" width="30" height="3" fill="#3a2416"/>`;
-s+=`<path d="M103 116 L110 124 L105 126Z M117 116 L110 124 L115 126Z" fill="${shade(o,.5)}"/><line x1="110" y1="124" x2="110" y2="142" stroke="${od}" stroke-width="1"/>`;
-s+=`<g fill="${shade(o,.5)}"><circle cx="110" cy="129" r="1"/><circle cx="110" cy="135" r="1"/></g>`;
-break;
-case 'mohom':
-s+=`<path d="M96 145 L124 145 L123 174 L113 174 L110 156 L107 174 L97 174Z" fill="${od}"/>`+shoes('#2a1c1c');
-s+=`<rect x="92" y="117" width="36" height="30" rx="8" fill="${o}"/><path d="M104 117 L110 127 L116 117" fill="${sk}"/>`;
-s+=`<rect x="92" y="141" width="36" height="5" fill="#d8443a"/><g fill="#f2f2ea" opacity=".75"><rect x="95" y="141" width="3" height="5"/><rect x="103" y="141" width="3" height="5"/><rect x="111" y="141" width="3" height="5"/><rect x="119" y="141" width="3" height="5"/></g>`;
+case 'thaiF': // sabai over a wrapped top, long pha sin with gold hem
+s+=`<path d="M97 139 L123 139 L124 174 L96 174Z" fill="${o}" ${ol()}/>`
++`<path d="M97 150 H123 M97 158 H123" stroke="${shade(o,.25)}" stroke-width="1.6"/><path d="M96.3 166 L123.7 166 L124 174 L96 174Z" fill="${gold}" ${ol(1)}/><path d="M104 140 L102 165" stroke="${od}" stroke-width="1.2"/>`
++`<path d="M99 174 h5 M115 174 h5" stroke="${shade(sk,-.15)}" stroke-width="2.4" stroke-linecap="round"/>`
++`<path d="M96 113 Q110 109 124 113 L126 140 L94 140Z" fill="${sk}" ${ol()}/>`
++`<path d="M95 122 Q110 119 125.5 122 L126 140 L94 140Z" fill="${shade(o,.35)}" ${ol(1)}/>`
++`<path d="M95.5 113 L104 112 L127 139 L117 141Z" fill="${o}" ${ol(1)}/><path d="M97 114 L125 139" stroke="${gold}" stroke-width="1.6"/>`
++`<rect x="94" y="137" width="32" height="4" rx="1" fill="${gold}" ${ol(.9)}/>`;
 break;
 case 'dress':
-s+=legs(166)+shoes(od);
-s+=`<path d="M96 140 L124 140 L138 168 Q110 174 82 168Z" fill="${o}"/><path d="M84 164 Q110 170 136 164 L138 168 Q110 174 82 168Z" fill="${shade(o,.35)}"/>`;
-s+=`<rect x="95" y="117" width="30" height="26" rx="8" fill="${o}"/><rect x="95" y="137" width="30" height="4" fill="${shade(o,.35)}"/>`;
+s+=legs(sk,152,170)+shoes(od)
++torso(o)+`<path d="M94 138 L126 138 L136 160 Q110 166 84 160Z" fill="${o}" ${ol()}/><path d="M86 157 Q110 163 134 157" stroke="${shade(o,.4)}" stroke-width="2" fill="none"/>`
++`<path d="M101 112 Q110 118 119 112" stroke="${shade(o,.45)}" stroke-width="1.6" fill="none"/><rect x="94" y="135.5" width="32" height="3.5" rx="1" fill="${shade(o,.45)}" ${ol(.8)}/>`;
 break;
-default:
-s+=legs(156)+shoes('#f2f2ea');
-s+=`<rect x="95" y="143" width="30" height="16" rx="3" fill="#3b5b8c"/><line x1="110" y1="148" x2="110" y2="159" stroke="#2a4570" stroke-width="1.4"/>`;
-s+=`<rect x="92" y="117" width="36" height="29" rx="8" fill="${o}"/><path d="M104 118 Q110 124 116 118" stroke="${od}" stroke-width="2" fill="none"/>`;
+case 'thaiM': // raj pattern jacket + chong kraben
+s+=`<path d="M101 158 L109.5 158 L109 170 L102 170Z M110.5 158 L119 158 L118 170 L111 170Z" fill="#f2eee4" ${ol(1)}/>`+shoes('#1e1814')
++`<path d="M94 139 Q90 156 100 160 L120 160 Q130 156 126 139Z" fill="${shade(o,-.4)}" ${ol()}/><path d="M110 140 L110 158 M101 146 Q104 154 102 158 M119 146 Q116 154 118 158" stroke="${shade(o,-.6)}" stroke-width="1" fill="none"/>`
++torso('#f4f1e8')+`<path d="M103 110 L117 110 L117 115 Q110 117 103 115Z" fill="#f4f1e8" ${ol(1)}/><path d="M110 115 V140" stroke="#cfc8b4" stroke-width="1"/>`
++`<g fill="${gold}" ${ol(.6)}><circle cx="110" cy="120" r="1.3"/><circle cx="110" cy="126" r="1.3"/><circle cx="110" cy="132" r="1.3"/></g><rect x="93" y="136" width="34" height="4" fill="${o}" ${ol(.9)}/>`;
+break;
+case 'shirt':
+s+=legs('#2b2f45',139,170)+shoes('#3a2416')
++torso(o)+`<path d="M103 111 L110 119 L104 121Z M117 111 L110 119 L116 121Z" fill="${shade(o,.55)}" ${ol(.9)}/><path d="M110 119 V139" stroke="${od}" stroke-width="1"/>`
++`<g fill="${shade(o,.6)}"><circle cx="110" cy="125" r="1"/><circle cx="110" cy="131" r="1"/></g><rect x="93.5" y="137" width="33" height="3.5" fill="#3a2416"/><rect x="108" y="137" width="4" height="3.5" fill="${gold}"/>`;
+break;
+case 'mohom':
+s+=legs(od,139,170)+shoes('#1e1814')
++torso(o)+`<path d="M104 111 L110 121 L116 111" fill="${sk}" ${ol(.9)}/><path d="M110 121 V136" stroke="${od}" stroke-width="1"/>`
++`<rect x="93" y="135" width="34" height="5" fill="#d8443a" ${ol(.9)}/><g fill="#f2f2ea" opacity=".8"><rect x="96" y="135" width="3" height="5"/><rect x="103" y="135" width="3" height="5"/><rect x="110" y="135" width="3" height="5"/><rect x="117" y="135" width="3" height="5"/></g>`;
+break;
+default: // t-shirt, jeans, sneakers
+s+=legs('#3c5f92',139,169)+sneakers
++`<path d="M101 145 V168 M119 145 V168" stroke="#2c4a75" stroke-width=".8"/>`
++torso(o)+`<path d="M103 111.5 Q110 117 117 111.5" stroke="${od}" stroke-width="1.5" fill="none"/><path d="M106 124 Q110 120 114 124 Q110 130 106 124Z" fill="${shade(o,.5)}"/>`
++`<rect x="93.5" y="137.5" width="33" height="3" fill="#2c4a75"/>`;
 }
 return s;
 }
 // arms are separate groups so gestures can swing them from the shoulder
 function arms(c){
-const sk=c.skin, sleeve = c.outfit==='thaiF' ? sk : (c.outfit==='thaiM' ? '#efeadb' : c.outfitColor);
-return `<g class="armL"><path d="M95 121 Q86 132 83 145" stroke="${sleeve}" stroke-width="8" stroke-linecap="round" fill="none"/><circle cx="83" cy="147" r="4.2" fill="${sk}"/></g>`
-+ `<g class="armR"><path d="M125 121 Q134 132 137 145" stroke="${sleeve}" stroke-width="8" stroke-linecap="round" fill="none"/><circle cx="137" cy="147" r="4.2" fill="${sk}"/>${holding(c)}</g>`;
+const sk=c.skin;
+const long = c.outfit==='thaiM'||c.outfit==='shirt'||c.outfit==='mohom';
+const sleeve = c.outfit==='thaiF' ? null : (c.outfit==='thaiM' ? '#f4f1e8' : c.outfitColor);
+const arm=(x0,x1,x2,cls,extra)=>{
+const p=`M${x0} 121 Q${x1} 133 ${x2} 145`;
+let a=`<path d="${p}" stroke="${OL}" stroke-width="7.6" stroke-linecap="round" fill="none"/><path d="${p}" stroke="${sk}" stroke-width="5.4" stroke-linecap="round" fill="none"/>`;
+if(sleeve){ const sp = long ? p : `M${x0} 121 Q${(x0+x1)/2} 126 ${x1} 130`;
+a+=`<path d="${sp}" stroke="${OL}" stroke-width="8.6" stroke-linecap="round" fill="none"/><path d="${sp}" stroke="${sleeve}" stroke-width="6.4" stroke-linecap="round" fill="none"/>`; }
+a+=`<circle cx="${x2}" cy="146.5" r="3.4" fill="${sk}" ${ol(1)}/>`;
+return `<g class="${cls}">${a}${extra||''}</g>`;
+};
+return arm(95,90,88,'armL') + arm(125,130,132,'armR',`<g transform="translate(-5 0)">${holding(c)}</g>`);
 }
-function figure(c){
-return `${hairBack(c)}${body(c)}<rect x="105" y="112" width="10" height="8" fill="${c.skin}"/><circle cx="110" cy="92" r="27" fill="${c.skin}"/><circle cx="83.5" cy="96" r="4" fill="${c.skin}"/><circle cx="136.5" cy="96" r="4" fill="${c.skin}"/>${face(c)}${hairFront(c)}${arms(c)}`;
-}
+function figure(c){ return `${hairBack(c)}${body(c)}${head(c)}${face(c)}${hairFront(c)}${arms(c)}`; }
 function characterSVG(cfg){
 const c=clean(cfg); U='k'+(++UID)+'_';
-return `<svg viewBox="58 42 104 142" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs></defs><ellipse cx="110" cy="179" rx="26" ry="4" fill="#000" opacity=".25"/><g class="fig">${figure(c)}</g></svg>`;
+return `<svg viewBox="58 40 104 144" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><ellipse cx="110" cy="177" rx="18" ry="3.2" fill="#000" opacity=".25"/><g class="fig">${figure(c)}</g></svg>`;
 }
 function holding(c){
 switch(c.hold){
 case 'flower': return `<path d="M139 148 Q144 132 142 120" stroke="#4f8a4a" stroke-width="2" fill="none"/>`+flowerAt(142,117,c.flower,6);
-case 'heart': return `<path d="M138 146 C130 138 132 128 139 131 C146 128 148 138 140 146Z" transform="translate(4 -8)" fill="#ff5c86" stroke="#ffd2df" stroke-width="1"/>`;
-case 'lantern': return `<line x1="138" y1="146" x2="146" y2="118" stroke="#8a6a3a" stroke-width="1.4"/><line x1="146" y1="118" x2="146" y2="124" stroke="#8a6a3a"/><circle cx="146" cy="133" r="16" fill="#f2b544" opacity=".15"/><path d="M139 124 L153 124 L155 140 L137 140Z" fill="#f08a3a"/><path d="M141 127 L151 127 L152 137 L140 137Z" fill="#ffd27a"/>`;
+case 'heart': return `<path d="M138 146 C130 138 132 128 139 131 C146 128 148 138 140 146Z" transform="translate(4 -8)" fill="#ff5c86" ${ol(.9)}/>`;
+case 'lantern': return `<line x1="138" y1="146" x2="146" y2="118" stroke="#8a6a3a" stroke-width="1.4"/><circle cx="146" cy="133" r="16" fill="#f2b544" opacity=".15"/><path d="M139 124 L153 124 L155 140 L137 140Z" fill="#f08a3a" ${ol(.9)}/><path d="M141 127 L151 127 L152 137 L140 137Z" fill="#ffd27a"/>`;
 default: return '';
 }
 }
